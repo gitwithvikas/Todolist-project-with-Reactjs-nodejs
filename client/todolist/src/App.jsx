@@ -4,7 +4,7 @@ import Login from "./components/login"
 import Registration from "./components/registeration"
 import { Routes,Route } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { addTodo } from "./reduxStore/slice"
+import { addTodo, fetchAllData } from "./reduxStore/slice"
 import Dashboard from "./components/dashboard"
 
 
@@ -13,15 +13,22 @@ function App() {
 
   const UserLogin = useSelector(state => state.myTodoState.userStatus)
 
+  console.log('userlogin',UserLogin)
     const dispatch = useDispatch()
 
 
   useEffect(()=>{
 
-     fetch('/api/todos').then(response=>response.json())
-     .then(res=>dispatch(addTodo(res)))
 
-     
+      fetch('/api/todos/list').then(response=>response.json())
+    .then(res=>{
+      if(res.data){
+        console.log(res.data)
+        dispatch(fetchAllData(res.data))
+      }
+        
+    })
+
 
   },[])
 

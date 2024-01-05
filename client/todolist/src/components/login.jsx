@@ -5,6 +5,8 @@ import { updateUser } from "../reduxStore/slice"
 
 function Login() {
 
+  
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -19,8 +21,9 @@ function Login() {
         const password = passbox.value
 
         const ob = {email:email,password:password}
+   
         
-        fetch('/api/login',{
+        fetch('/api/user/login',{
             method:"post",
             headers:{
                 "Content-type":"application/json"
@@ -28,9 +31,11 @@ function Login() {
             body:JSON.stringify(ob)
         }).then(response=>response.json())
         .then(res=>{
+         
             if(res.msg == "User Login Successfull..."){
                 dispatch(updateUser(true))
                 navigate('/dashboard')
+                localStorage.setItem('userStatus',JSON.stringify(true))
             }
         })
 
@@ -49,19 +54,19 @@ function Login() {
 
     <h2 style={{color:"white",fontSize:"40px" }} >Login</h2>
 
-     <form action="">
+     <form action="" onSubmit={(e)=>login(e)}>
 
      <div>
       <label  htmlFor="email">Email</label> <br />
-      <input type="text" className='form-control' ref={v=>emailbox =v} placeholder='email' name='email' />
+      <input type="text" className='form-control' ref={v=>emailbox =v} placeholder='Email' name='Email' required/>
     </div> 
     <div>
       <label htmlFor="password">Password</label><br />
-      <input type="text" className='form-control'  ref={v=>passbox =v}  name="password" id="" placeholder='password' />
+      <input type="text" className='form-control'  ref={v=>passbox =v}  name="password" id="" placeholder='Password' required />
     </div><br />
 
-    <div className='row'>
-     <button className='form-control btn btn-success' onClick={(e)=>login(e)} style={{padding:"6px 115px"}} >Login</button>
+    <div>
+     <button className='form-control btn btn-success'   >Login</button>
     </div>
 
      </form>

@@ -26,7 +26,7 @@ function Registration() {
 
         const ob = {fullname:name,fathername:father_name,email:email,phone:phone_number,password:password}
 
-        fetch('/api/register',{
+        fetch('/api/user/register',{
             method:"post",
             headers:{
                 "Content-type":"application/json"
@@ -74,26 +74,26 @@ function Registration() {
     </div>
 
     <label style={{color:'white', fontSize:"15px", marginBottom:"9px"}} htmlFor="phone">Phone Number:</label>
-    <div style={{display:"flex", justifyContent:"center"}} >
 
-      
-        <div style={{width:"10%"}}>
-
-            <input type="text"  name="phone"  className="form-control" placeholder='+91' />
-        </div> &nbsp;&nbsp;
-        <div   style={{width:"38%"}} >
-         <input  type="text"className='form-control' ref={v=>phonebox =v} name="phone" id="" placeholder='Phone Number' required />
-        </div>
-
+    <div style={{display:'flex',flexDirection:'row'}} >
+    <select style={{width:"60px",marginRight:"2px"}}  id="country" className="form-control" name="country">
+    <option value="INDIA">+91</option>
+    <option value="">+92</option>
+    <option value="">+93</option>
+    <option value="">+83</option>
+   
+  </select>
+  <input type="number" className="form-control" id="quantity" name="quantity" min="1" max="100" placeholder="Enter a number"/>
     </div>
+
 
     <div>
       <label style={{color:'white', fontSize:"15px", marginBottom:"9px"}} htmlFor="password">Password</label><br />
       <input type="text" className='form-control' ref={v=>passbox =v} name="password" id="" placeholder='Password' required />
     </div><br />
 
-    <div className='row'>
-     <button className='form-control btn btn-success' style={{padding:"6px 115px"}} onClick={(e)=>register(e)} >SignUp</button>
+    <div >
+     <button className='form-control btn btn-success'onClick={(e)=>register(e)} >SignUp</button>
     </div>
      </form>
 

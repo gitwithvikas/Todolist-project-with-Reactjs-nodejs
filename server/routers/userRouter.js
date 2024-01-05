@@ -3,16 +3,23 @@ const router = express.Router()
 const db = require('../config/DB')
 const bcrypt = require('bcrypt')
 const salt = 10
+const jwt = require('../JWT/JWT')
 
 router.post('/register',(req,res)=>{
     const data = req.body
 
-    if(data.password==null || data.email==null){
+    if(data.fullname=='' || data.fathername=='' || data.email=='' || data.phone=='',data.password==''){
         return res.status(500).json({msg:'Please fillout all Fields'})
     }else{
-         bcrypt.genSalt(salt, (err, salt)=> {
+
+        db.query("select email from users where email = ? ",[data.email],(err,email)=>{
+            if(email){
+                return res.status(400).json({msg:'Email is already used'})
+            }
+            else{
+                bcrypt.genSalt(salt, (err, salt)=> {
         bcrypt.hash(data.password, salt,(err, hash)=> {
-           db.query('insert into users (fullname,fathername,email,phone,password) value(?,?,?,?,?) ',[data.email,hash],(err,result)=>{
+           db.query('insert into users (fullname,fathername,email,phone,password) values(?,?,?,?,?) ',[data.fullname,data.fathername,data.email,data.phone,hash],(err,result)=>{
         if(err){
             return res.json({status:false,msg:'User Registration Failed',err})
         }
@@ -23,6 +30,10 @@ router.post('/register',(req,res)=>{
 
         });
     });
+            }
+        })
+
+        
 
     }
     
@@ -38,7 +49,7 @@ router.post("/login",(req,res)=>{
 
     const data = req.body
    
-    Db.query('select * from users WHERE email = ?' , [data.email],(err ,user)=>{
+    db.query('select * from users WHERE email = ?' , [data.email],(err ,user)=>{
         if(err || user.length == 0){
             return res.status(600).json({status:false,msg:'Invalid Credentials !'})
         }
