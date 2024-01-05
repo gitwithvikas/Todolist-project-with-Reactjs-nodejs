@@ -58,7 +58,7 @@ function Registration() {
 
     <h2 style={{color:"white",fontSize:"40px" }} >Sign Up</h2>
 
-     <form action=""  >
+     <form action=""  onSubmit={(e)=>register(e)} >
 
      <div>
       <label style={{color:'white', fontSize:"15px", marginBottom:"9px"}}  htmlFor="fullname">Full Name</label> <br />
@@ -93,7 +93,7 @@ function Registration() {
     </div><br />
 
     <div >
-     <button className='form-control btn btn-success'onClick={(e)=>register(e)} >SignUp</button>
+     <button className='form-control btn btn-success'  >SignUp</button>
     </div>
      </form>
 
