@@ -1,13 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// const data = localStorage.getItem('reduxState') 
-// console.log(JSON.parse(data).myTodoState)
-var status = localStorage.getItem('userStatus')
-if(status){
-    status = status
-}else{
-    status = false
-}
 
 
 var cartSlice = createSlice({
@@ -15,8 +7,8 @@ var cartSlice = createSlice({
     name: 'todolist',
 
     initialState: {
-        value:[] ,
-        userStatus:status  
+        value:[] 
+        
     },
 
     reducers: {
@@ -41,11 +33,6 @@ var cartSlice = createSlice({
         removeAllItems: (state) => {
             state.value = [] 
         
-        },
-
-        updateUser:(state,action)=>{
-            state.userStatus = action.payload
-
         },
 
 

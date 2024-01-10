@@ -1,7 +1,12 @@
+import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
 
 function Registration() {
+
+
+  const [password,setPassword] = useState('')
+  const [confirmPassword,setConfirmPassword] = useState('')
 
 
     const navigate = useNavigate()
@@ -10,21 +15,22 @@ function Registration() {
     var fathernamebox = undefined
     var emailbox = undefined
     var phonebox = undefined
-    var passbox = undefined
     
     const register = (e)=>{
         
         e.preventDefault()
 
-        const name = namebox.value
+        if(password == confirmPassword){
+          
+           const name = namebox.value
         const father_name = fathernamebox.value
         const email = emailbox.value
         const phone_number = phonebox.value
-        const password = passbox.value
+        const pass = password
 
-        console.log(name,father_name,email,phone_number,password)
+        console.log(name,father_name,email,phone_number,pass)
 
-        const ob = {fullname:name,fathername:father_name,email:email,phone:phone_number,password:password}
+        const ob = {fullname:name,fathername:father_name,email:email,phone:phone_number,password:pass}
 
         fetch('/api/user/register',{
             method:"post",
@@ -34,11 +40,17 @@ function Registration() {
             body:JSON.stringify(ob)
         }).then(response=>response.json())
         .then(res=>{
+          console.log(res)
             if(res.msg == "User Registration Successfull"){
-                navigate('/login')
+                navigate('/')
             }
         })
 
+
+        }
+       
+
+       
 
     }
 
@@ -58,7 +70,7 @@ function Registration() {
 
     <h2 style={{color:"white",fontSize:"40px" }} >Sign Up</h2>
 
-     <form action=""  >
+     <form action="" onSubmit={(e)=>register(e)} >
 
      <div>
       <label style={{color:'white', fontSize:"15px", marginBottom:"9px"}}  htmlFor="fullname">Full Name</label> <br />
@@ -76,24 +88,32 @@ function Registration() {
     <label style={{color:'white', fontSize:"15px", marginBottom:"9px"}} htmlFor="phone">Phone Number:</label>
 
     <div style={{display:'flex',flexDirection:'row'}} >
-    <select style={{width:"60px",marginRight:"2px"}}  id="country" className="form-control" name="country">
-    <option value="INDIA">+91</option>
-    <option value="">+92</option>
-    <option value="">+93</option>
-    <option value="">+83</option>
-   
-  </select>
-  <input type="number" className="form-control" id="quantity" name="quantity" min="1" max="100" placeholder="Enter a number"/>
+    <input style={{width:"60px",marginRight:"2px"}}  id="country" className="form-control"  name="country" placeholder="+91">
+    
+
+  </input>
+  <input type="text" onChange={(e)=> e.target.value = e.target.value.replace(/\D/g, '').substring(0, 10)} className="form-control" ref={v=>phonebox =v} id="quantity" name="quantity" placeholder="Enter a number"/>
     </div>
 
 
     <div>
       <label style={{color:'white', fontSize:"15px", marginBottom:"9px"}} htmlFor="password">Password</label><br />
-      <input type="text" className='form-control' ref={v=>passbox =v} name="password" id="" placeholder='Password' required />
+      <input type="text" className='form-control' onChange={(e)=>setPassword(e.target.value)} name="password" id="" placeholder='Password' required />
+    </div>
+
+
+    <div>
+      <label style={{color:'white', fontSize:"15px", marginBottom:"9px"}} htmlFor="confirm password">Confirm Password</label><br />
+      <input type="text" onChange={(e)=>setConfirmPassword(e.target.value)} className='form-control' name="confirm password" id="" placeholder='Confirm Password' required />
+      {password!=confirmPassword?<>
+       <span style={{color:'red'}} >Password Don't Match</span>
+      </>:''}
     </div><br />
 
+
+
     <div >
-     <button className='form-control btn btn-success'onClick={(e)=>register(e)} >SignUp</button>
+     <button className='form-control btn btn-success' >SignUp</button>
     </div>
      </form>
 

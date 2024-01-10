@@ -1,11 +1,13 @@
 import { useDispatch } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
 import { updateUser } from "../reduxStore/slice"
+import { useState } from "react"
 
 
 function Login() {
 
   
+  const [errorMsg,setErrorMsg] = useState('')
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -31,11 +33,15 @@ function Login() {
             body:JSON.stringify(ob)
         }).then(response=>response.json())
         .then(res=>{
-         
-            if(res.msg == "User Login Successfull..."){
-                dispatch(updateUser(true))
+            if(res.msg == "User Login Successfull..."){ 
                 navigate('/dashboard')
-                localStorage.setItem('userStatus',JSON.stringify(true))
+                localStorage.setItem('userToken',JSON.stringify(res.token))
+            }
+            else{
+              setErrorMsg(res.msg)
+              setTimeout(() => {
+                setErrorMsg('')
+              }, 3000);
             }
         })
 
@@ -65,9 +71,15 @@ function Login() {
       <input type="text" className='form-control'  ref={v=>passbox =v}  name="password" id="" placeholder='Password' required />
     </div><br />
 
+    
+
     <div>
      <button className='form-control btn btn-success'   >Login</button>
     </div>
+
+    {errorMsg?<>
+      <span style={{color:"red"}}>{errorMsg}</span>
+      </>:''}
 
      </form>
 

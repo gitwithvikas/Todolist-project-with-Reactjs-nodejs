@@ -2,7 +2,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 const jwt = require('jsonwebtoken')
 
-const Db = require('../DataBase/DBconnection')
+const Db = require('../config/DB')
 
 // const User = require('../models/mySchema/user')
 
@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
     }
     jwt.verify(token, process.env.TOKEN, (err, payload) => {
         if (err) {
-            return res.status(401).json({ status: false, msg: 'You Must have logged In!' })
+            return res.status(401).json({ status: false, msg: 'You Must have logged In!',err })
         }  
         const id  = payload.user
         console.log(id)

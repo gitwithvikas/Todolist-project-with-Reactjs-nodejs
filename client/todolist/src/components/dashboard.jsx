@@ -1,8 +1,8 @@
 
-import { useEffect, useState } from "react"
+import { useEffect, useId, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom"
-import { addTodo, deleteTodo, updateUserTodo } from "../reduxStore/slice";
+import { addTodo, deleteTodo, fetchAllData, updateUserTodo } from "../reduxStore/slice";
 import { FaCheckSquare } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import { RxCross1 } from "react-icons/rx";
@@ -18,8 +18,8 @@ function Dashboard() {
   const navigate = useNavigate()
 
   const mytodos = useSelector(state => state.myTodoState.value)
+  
 
- 
   const dispatch = useDispatch()
 
   const [updateDate, setUpdateData] = useState(false)
@@ -84,19 +84,20 @@ function Dashboard() {
 
     var dis = todobox.value
 
-
     var ob = { discription: dis }
 
+    console.log(ob)
 
     fetch('/api/todos/save', {
       method: "post",
       headers: {
-        "Content-type": "application/json"
+        "Content-type": "application/json",
+        "authorization": 'Token ' + JSON.parse(localStorage.getItem('userToken'))
       },
       body: JSON.stringify(ob)
     }).then(response => response.json())
       .then(res => {
-       
+        console.log(res)
         if (res.msg == "saved successfully") {
           dispatch(addTodo(res.result))
           todobox.value = ''
@@ -149,9 +150,31 @@ function Dashboard() {
   }
 
   const LogOut = ()=>{
-     localStorage.removeItem('userStatus')
+     localStorage.removeItem('userToken')
      navigate('/')
   }
+
+
+  useEffect(()=>{
+
+
+    fetch('/api/todos/list',{
+      headers:{
+        'authorization' :'Token ' + JSON.parse(localStorage.getItem('userToken'))
+      }
+    }).then(response => response.json())
+      .then(res => {
+        if (res.data) {
+          dispatch(fetchAllData(res.data))
+        }
+
+      })
+
+
+
+  },[])
+
+
 
 
 
@@ -297,8 +320,11 @@ function Dashboard() {
 
               ))}
 
+              {pages.length>0?<>
               <p style={{ color: "white", fontSize: "18px", cursor: "pointer" }}><MdOutlineKeyboardDoubleArrowRight onClick={() => setCurrentPage(currentPage + 1)} />
               </p>
+              </>:''}
+              
             </span>
 
           </div>

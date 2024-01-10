@@ -9,7 +9,3 @@ var store = configureStore({
 })
 
 export default store;
-
-// store.subscribe(()=>{
-//     localStorage.setItem('reduxState', JSON.stringify(store.getState()))
-//   })

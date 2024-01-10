@@ -7,18 +7,20 @@ const jwt = require('../JWT/JWT')
 
 router.post('/register',(req,res)=>{
     const data = req.body
-
+    
     if(data.fullname=='' || data.fathername=='' || data.email=='' || data.phone=='',data.password==''){
         return res.status(500).json({msg:'Please fillout all Fields'})
     }else{
 
         db.query("select email from users where email = ? ",[data.email],(err,email)=>{
-            if(email){
+            if(email.length!=0){
+                
                 return res.status(400).json({msg:'Email is already used'})
             }
             else{
                 bcrypt.genSalt(salt, (err, salt)=> {
         bcrypt.hash(data.password, salt,(err, hash)=> {
+          
            db.query('insert into users (fullname,fathername,email,phone,password) values(?,?,?,?,?) ',[data.fullname,data.fathername,data.email,data.phone,hash],(err,result)=>{
         if(err){
             return res.json({status:false,msg:'User Registration Failed',err})

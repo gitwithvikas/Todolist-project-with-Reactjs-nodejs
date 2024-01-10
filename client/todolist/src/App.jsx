@@ -1,5 +1,5 @@
 // import Login from "./components/login"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import Login from "./components/login"
 import Registration from "./components/registeration"
 import { Routes, Route, redirect, useNavigate } from "react-router-dom"
@@ -10,33 +10,22 @@ import Dashboard from "./components/dashboard"
 
 
 function App() {
+  
 
-  const UserLogin = useSelector(state => state.myTodoState.userStatus)
-
-  console.log('userlogin', UserLogin)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
 
   useEffect(() => {
 
-    if (!UserLogin && window.location.pathname === '/dashboard') {
+    var userToken = localStorage.getItem('userToken')
+
+    if (!userToken || window.location.pathname === '/dashboard' && !userToken ) {
       navigate('/');
     }
-
-
-    fetch('/api/todos/list').then(response => response.json())
-      .then(res => {
-        if (res.data) {
-          console.log(res.data)
-          dispatch(fetchAllData(res.data))
-        }
-
-      })
-
-
-
-
+    else{
+      navigate('/dashboard')
+    }
 
   }, [])
 

@@ -5,14 +5,16 @@ const router = express.Router()
 
 const db = require('../config/DB')
 
-router.post('/save',(req,res)=>{
+const authUser = require('../JWT/auth')
+
+router.post('/save',authUser,(req,res)=>{
     const data = req.body
     console.log(data)
     if(data.discription == ''){
         return res.json({msg:"Insert discription"})
     }
     else{
-         db.query('insert into todos (discription,created_at) values (?,CURDATE()) ',[data.discription],(err,result)=>{
+         db.query('insert into todos (discription,user_id,created_at) values (?,?,CURDATE()) ',[data.discription,req.loggedUser.id],(err,result)=>{
         if(err){
             return res.json({err})
         }
@@ -34,10 +36,11 @@ router.post('/save',(req,res)=>{
 })
 
 
-router.get('/list',(req,res)=>{
+router.get('/list',authUser,(req,res)=>{
 
     console.log('inside list')
-    db.query('select * from todos',(err,data)=>{
+    const userId = req.loggedUser.id
+    db.query('select * from todos where user_id = ?',[userId],(err,data)=>{
         if(err){
             return res.json({err})
         }
